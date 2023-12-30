@@ -1,0 +1,49 @@
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras import layers
+import warnings
+
+warnings.filterwarnings('ignore')
+# Load the dataset (you can use one of these)or any dataset you need
+"""
+E-Commerce Data from : https://www.kaggle.com/datasets/carrie1/ecommerce-data?resource=download
+Bank Marketing from : https://www.kaggle.com/datasets/henriqueyamahata/bank-marketing
+"""
+df = pd.read_csv("bank-additional-full.csv")
+# preparing my X,y_axis
+X = df.drop(['medv'], 1)
+y = df['medv']
+X_train,  X_test,  y_train, y_test = train_test_split(X,  y,test_size=0.3)
+# making a check(optional)
+print('X_train shape',X_train.shape)
+print('X_test shape',X_test.shape)
+print('y_train shape',y_train.shape)
+print('y_test shape',y_test.shape)
+
+# Build the neural network model
+model = Sequential()
+# Input layer
+model.add(layers.Dense(32, activation='sigmoid', input_shape=(X_train.shape[1],)))
+# Hidden layers
+model.add(Dense(16, activation='relu'))
+model.add(Dense(8, activation='relu'))
+# Output layer
+model.add(layers.Dense(1, activation='linear'))
+
+# Compile the model
+model.compile(optimizer='sgd', loss='mean_squared_error', metrics=['accuracy'])
+
+# Train the model
+MyPlot = model.fit(X_train, y_train, validation_data(X_test,y_test),epochs=20)
+
+# Evaluate the model on the test set
+preds = model.predict(X_test).reshape(-1,)
+res = pd.DataFrame()
+res['Actual'] = y_test.values
+res['preds'] = preds
+
+print(res)
